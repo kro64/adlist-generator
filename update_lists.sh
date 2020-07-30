@@ -1,6 +1,6 @@
 #!/bin/bash
 
-DIR=/opt/adblock_updater
+DIR=/opt/adlist-generator
 AD_LIST=$(curl -s https://v.firebog.net/hosts/lists.php?type=tick)
 OUT=$DIR/ad_blacklist
 TEMP=$DIR/temp
@@ -37,7 +37,8 @@ awk '{print $1}' $OUT > $TEMP; mv $TEMP $OUT
 awk 'NF' $OUT > $TEMP; mv $TEMP $OUT
 # Remove carriage return ^M
 sed -i 's/\r$//' $OUT
-
+# Replace multiple dots with a single
+sed -i -E "s/\.+/./g" $OUT
 
 echo > $UNBOUND_CONF
 convert_to_unbound
