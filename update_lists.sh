@@ -19,18 +19,20 @@ done < $OUT
 mkdir -p $DIR
 
 # Clean the old blacklist
-echo > $OUT
+#echo > $OUT
 
 # Get latest ad domains (careful for rate limiting)
-for i in ${AD_LIST}; 
-	do curl -s $i >> $OUT
-done
+#for i in ${AD_LIST}; 
+#	do curl -s $i >> $OUT
+#done
 
 # Process the blacklist
 # Removing #
 sed -i '/^#/d' $OUT
 # Removing IPs
-sed -i -r 's/([0-9]{1,3}\.){3}[0-9]{1,3}//g' $OUT
+sed -i -r 's/^([0-9]{1,3}\.){3}[0-9]{1,3}$//g' $OUT
+# Removing 0.0.0.0
+sed -i 's/0.0.0.0//g' $OUT
 # Removing spaces etc.
 awk '{print $1}' $OUT > $TEMP; mv $TEMP $OUT
 # Removing empty lines
